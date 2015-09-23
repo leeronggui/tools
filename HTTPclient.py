@@ -18,6 +18,7 @@ class HTTPclient():
             type(res)
             return(res)
 
+
 if __name__ == '__main__':
     hc = HTTPclient()
     res = hc.get('www.baidu.com', port=80, location='/')
