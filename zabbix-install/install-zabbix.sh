@@ -25,7 +25,7 @@ setenforce 0
 yum -y install gcc gcc-c++  make automake autoconf kernel-devel ncurses-devel \
 libxml2-devel openssl-devel curl-devel libjpeg-devel libpng-devel  pcre-devel \
 libtool-libs freetype-devel gd zlib-devel file bison patch mlocate flex diffutils \
-readline-devel glibc-devel glib2-devel bzip2-devel gettext-devel libcap-devel libmcrypt-devel
+readline-devel glibc-devel glib2-devel bzip2-devel gettext-devel libcap-devel libmcrypt-devel net-snmp-devel libXpm-devel
 #make all dir
 mkdir -p ${HTTPD_HOME} ${PHP_HOME} ${MYSQLD_HOME} ${ZABBIX_HOME}
 
@@ -173,6 +173,8 @@ cp support-files/my-default.cnf conf/my.cnf
 
 service mysqld restart
 #参数可选:--user=mysql
+#设置密码:
+./mysqladmin -u root password "111111"
 #创建启停脚本
 echo "#####################Install mysql success.########################"
 #install php
@@ -180,7 +182,7 @@ echo "#####################Begin to install PHP########################"
 #安装依赖库
 # autoconf-2.69.tar.xz  libmcrypt-2.5.8.tar.gz  php-5.6.20.tar.gz
 # freetype-2.6.tar.gz   libpng-1.6.21.tar.gz    zlib-1.2.8.tar.gz
-# 此版本没有安装的库:libxml2 gd jpegsrc.v8b.tar.gz jpegsrc.v8b.tar.gz
+# 此版本没有安装的库:libxml2 
 
 cd ${PHP_TAR_DIR}
 tar zxf autoconf-2.69.tar.gz
@@ -218,42 +220,38 @@ cd libiconv-1.14
 ./configure --prefix=/usr/local/php/libiconv
 make && make install
 
+
+cd ${PHP_TAR_DIR}
+tar zxf gd-2.1.1.tar.gz
+cd libgd-gd-2.1.1/
+./bootstrap.sh
+./configure --prefix=/usr/local/php/libgd  \
+            --with-zlib=/usr/local/php/zlib \
+            --with-png=/usr/local/php/libpng \
+            --with-freetype=/usr/local/php/freetype \
+            --with-jpeg=/usr/local/php/jpeg
+make && make install
+
+cd ${PHP_TAR_DIR}
+tar zxf jpegsrc.v8b.tar.gz 
+cd jpeg-8b/
+./configure --prefix=/usr/local/php/jpeg
+make && make install
+
 cd ${PHP_TAR_DIR}
 tar zxf php-5.6.20.tar.gz
 cd php-5.6.20
 ./configure --prefix=/usr/local/php \
 			--with-config-file-path=/usr/local/php/etc \
 			--with-apxs2=/usr/local/httpd/bin/apxs \
-			--with-mysql=/usr/local/mysql/ \
-			--with-pdo-mysql=/usr/local/mysql/ \
-			--with-png-dir=/usr/local/php/libpng/ \
-			--with-freetype-dir=/usr/local/php/freetype/ \
-			--with-zlib-dir=/usr/local/php/zlib/ \
-			--with-mcrypt=/usr/local/php/libmcrypt/ \
-			--with-mysqli=/usr/local/mysql/bin/mysql_config/ \
-			--enable-soap \
-			--enable-mbstring=all \
-			--enable-sockets \
-			--enable-fpm \
-			--enable-calendar \
-			--enable-dba \
-			--enable-ftp \
-			--enable-zip \
-			--enable-bcmath \
-			--enable-xml \
-			--enable-pcntl \
-			--enable-mbstring \
-			--with-iconv-dir=/usr/local/php/libiconv 
-./configure --prefix=/usr/local/php \
-			--with-config-file-path=/usr/local/php/etc \
-			--with-apxs2=/usr/local/httpd/bin/apxs \
-			--with-mysql=/usr/local/mysql/ \
-			--with-pdo-mysql=/usr/local/mysql/ \
-			--with-png-dir=/usr/local/php/libpng/ \
-			--with-freetype-dir=/usr/local/php/freetype/ \
-			--with-zlib-dir=/usr/local/php/zlib/  \
-			--with-mcrypt=/usr/local/php/libmcrypt/ \
+			--with-mysql=/usr/local/mysql \
+			--with-pdo-mysql=/usr/local/mysql \
+			--with-png-dir=/usr/local/php/libpng \
+			--with-freetype-dir=/usr/local/php/freetype \
+			--with-zlib-dir=/usr/local/php/zlib \
+			--with-mcrypt=/usr/local/php/libmcrypt \
 			--with-mysqli=/usr/local/mysql/bin/mysql_config \
+			--with-gd=/usr/local/php/libgd \
 			--enable-soap \
 			--enable-mbstring=all \
 			--enable-sockets \
@@ -268,9 +266,57 @@ cd php-5.6.20
 			--enable-pcntl \
 			--with-iconv-dir=/usr/local/php/libiconv
 make && make install
+#配置php
+cp php.ini-development /usr/local/php/etc/
+cp php.ini-production /usr/local/php/etc/
+mv php.ini-production php.ini
 echo "#####################Install PHP success.########################"
 #install zabbix
 
 cd ${ZABBIX_TAR_DIR}
 tar zxf zabbix-3.0.2.tar.gz
 cd zabbix-3.0.2
+
+#导入数据:
+/usr/local/mysql/bin/mysql -uroot -p zabbix < schema.sql
+/usr/local/mysql/bin/mysql -uroot -p zabbix < images.sql
+/usr/local/mysql/bin/mysql -uroot -p zabbix < data.sql 
+
+groupadd zabbix
+useradd -g zabbix -m zabbix
+
+./configure --prefix=/usr/local/zabbix \
+			--with-mysql=/usr/local/mysql/bin/mysql_config/ \
+			--with-net-snmp \
+			--with-libcurl \
+			--enable-server \
+			--enable-agent \
+			--enable-proxy
+#若./configure 出现hecking for mysql_config... configure: error: MySQL library not found,
+#可以使用find / -name "mysql_config"来查看mysql_config位置,用--with-mysql指定；
+#若./configure出现错误configure: error: Invalid NET-SNMP directory - unable to find net-snmp-config，
+#可以通过yum install net-snmp-devel来解决。
+
+make && make install
+
+#配置
+#拷贝修改zabbix服务端、客户端启动脚本
+cp misc/init.d/fedora/core/zabbix_server /usr/local/zabbix/bin/
+cp misc/init.d/fedora/core/zabbix_agentd /usr/local/zabbix/bin/
+#拷贝前端代码
+cp frontends/php /usr/local/httpd/htdocs/
+
+#修改server配置:
+vim /usr/local/zabbix/bin/zabbix_server
+------------
+DBName=zabbix
+DBUser=zabbix
+DBPassword=redhat  //DBPassword 默认是被注释掉的，需要自己添加
+DBSocket=/tmp/mysql.sock   //我发现如果不加下面这2条，zabbix会一直报connection to database 'zabbix' failed: [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock'。即使mysql账号、权限是正确的，/var/lib/mysql/mysql.sock存在也是一样会报错。
+DBPort=3306
+---------
+#Starting zabbix_server:  /usr/local/zabbix/sbin/zabbix_server: 
+#error while loading shared libraries: libmysqlclient.so.18: 
+#cannot open shared object file: No such file or directory  [FAILED]
+echo "/usr/local/mysql/lib" >> /etc/ld.so.conf
+ldconfig
