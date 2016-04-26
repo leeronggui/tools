@@ -161,6 +161,18 @@ make && make install
 #如果出现make不通过,可以直接重新解压,重新cmake
 
 #配置mysql
+cd ${MYSQLD_HOME}
+
+cp support-files/mysql.server /etc/init.d/mysqld
+cp support-files/my-default.cnf conf/my.cnf 
+/usr/local/mysql/scripts/mysql_install_db \
+			--defaults-file=/usr/local/mysql/conf/my.cnf \
+			--basedir=/usr/local/mysql \
+			--datadir=/usr/local/mysql/data/ \
+			--user=mysql
+
+service mysqld restart
+#参数可选:--user=mysql
 #创建启停脚本
 echo "#####################Install mysql success.########################"
 #install php
@@ -258,3 +270,7 @@ cd php-5.6.20
 make && make install
 echo "#####################Install PHP success.########################"
 #install zabbix
+
+cd ${ZABBIX_TAR_DIR}
+tar zxf zabbix-3.0.2.tar.gz
+cd zabbix-3.0.2
