@@ -1,0 +1,22 @@
+#! /bin/sh
+
+PATH=/usr/sbin:/sbin:/usr/bin:/bin
+IFS=
+
+readonly G_LOCAL_SBIN="$(cd `dirname "${0}"` && pwd)"
+
+run()
+{
+    while true; do
+        ${G_LOCAL_SBIN}/memcached "$@"
+        sleep 10
+    done
+    exit 1
+}
+
+if [ $# -gt 0 ]; then
+    run "$@"
+fi
+
+exec setsid "${0}" "$@" </dev/null >/dev/null 2>&1
+exit 1

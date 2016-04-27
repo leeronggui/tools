@@ -1,0 +1,88 @@
+#!/bin/bash
+
+#------configuration----------------
+PORT=11211
+#-t thread , -c  connection ,-m memory -p port
+PARAMETER="-t 7 -c 200000 -m 3000 -p $PORT"
+SUPERVISE="supervise.memcached"
+PROG_PATH="$(cd $(dirname $0) && pwd)"
+#----------------------------------
+
+#check program start successful
+check(){
+    nc  -w 3 -z 127.0.0.1 $PORT >/dev/null 2>&1
+    if [ $? -eq 0 ];then
+        return 0
+    else
+        return 1
+    fi
+}
+
+start() {
+    check
+    if [ $? -eq "0" ];then
+        echo "start success"
+        return 0
+    else
+        setsid ${PROG_PATH}/${SUPERVISE} $PARAMETER >/dev/null 2>&1 &
+        sleep 5s
+        check
+    fi
+}
+
+stop(){
+    check
+    if [ $? -ne 0 ];then
+        echo "stop success"
+        return 0
+    else
+        pid="$(ss -lnp|grep -P ":${PORT} "|awk -F ',' '{print $2}')"
+        if [ -z "$pid" ];then
+            echo "stop failed"
+            return 1
+        fi
+
+        ppid="$(ps -eo pid,ppid,command|grep "memcached"| grep -P  "^${pid} "|awk '{print $2}')"
+
+        if [ ! -z "$ppid" ] && [ "$ppid" -ne 1 ];then
+            kill -9 $ppid
+        fi
+        kill -9 "$pid"
+
+        sleep 5s
+
+        check
+
+        if [ $? -ne "0" ];then
+            echo "stop success"
+            return 0
+        else
+            echo "stop failed"
+            return 1
+        fi
+    fi
+}
+
+restart(){
+    stop 
+    sleep 1s
+    start
+}
+
+case C"$1" in
+        Cstart)
+                start
+                echo "Done!"
+                ;;
+        Cstop)
+                stop
+                echo "Done!"
+                ;;
+        Crestart)
+                restart
+                echo "Done!"
+                ;;
+        C*)
+                echo "Usage: $0 {start|stop|restart}"
+                ;;
+esac

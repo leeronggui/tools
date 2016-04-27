@@ -1,0 +1,60 @@
+#!/bin/bash
+#memcached monitor
+#sh memcached_mon.sh 11213 or sh memcached_mon.sh(default 11211 port)
+
+set -o pipefail
+
+#print error message
+#Globals:
+#  None
+#Arguments:
+#  message you want to print
+#Return:
+#  None
+err(){
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $@" >&2
+}
+
+#Globals:
+#  None
+#Arguments:
+#  port: the port of the memcache you want to monitor
+#Return:
+#  None
+get_memcached_status(){
+    local port
+    port="$@"
+    output="$(echo -e "stats\nquit\n"|nc -w 3 localhost "$port"| grep 'STAT'|sed 's/STAT//g'|tr -d '\r')"
+    if [[ "$?" -ne "0" ]] || [[ -z "$output" ]];then
+        err "get memcached ${port} info failed!"
+        exit 1
+    fi
+    echo "$output" |while read line;do
+      key=$(echo "$line" |awk '{print $1}')
+      value=$(echo "$line" |awk '{print $2}')
+      if echo "$value" |grep -P -q '^\d+(\.\d+)?$';then
+        echo "${key}: ${value}" 
+      else
+        echo "${key}: \"${value}\"" 
+      fi 
+    done
+}
+
+#main function
+#Globals:
+#  None
+#Arguments:
+#  you can input a port you want to monitor
+#Return:
+#  None
+main() {
+  if [ -n "$1" ]; then
+    port="$1"
+  else
+    port="11211"
+  fi
+  get_memcached_status $port
+}
+
+cd $(dirname "$0")
+main "$@"
