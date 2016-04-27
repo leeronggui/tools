@@ -322,3 +322,7 @@ echo "/usr/local/mysql/lib" >> /etc/ld.so.conf
 ldconfig
 #修改agent配置
 #启动脚本:BASEDIR=/usr/local/zabbix
+
+####
+#tar地址:百度网盘:tools-zabbix
+####
