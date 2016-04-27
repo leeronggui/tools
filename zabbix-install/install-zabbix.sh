@@ -307,16 +307,18 @@ cp misc/init.d/fedora/core/zabbix_agentd /usr/local/zabbix/bin/
 cp frontends/php /usr/local/httpd/htdocs/
 
 #修改server配置:
-vim /usr/local/zabbix/bin/zabbix_server
-------------
-DBName=zabbix
-DBUser=zabbix
-DBPassword=redhat  //DBPassword 默认是被注释掉的，需要自己添加
-DBSocket=/tmp/mysql.sock   //我发现如果不加下面这2条，zabbix会一直报connection to database 'zabbix' failed: [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock'。即使mysql账号、权限是正确的，/var/lib/mysql/mysql.sock存在也是一样会报错。
-DBPort=3306
----------
+#vim /usr/local/zabbix/bin/zabbix_server
+#------------
+#DBName=zabbix
+#DBUser=zabbix
+#DBPassword=redhat  //DBPassword 默认是被注释掉的，需要自己添加
+#DBSocket=/tmp/mysql.sock   //我发现如果不加下面这2条，zabbix会一直报connection to database 'zabbix' failed: [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock'。即使mysql账号、权限是正确的，/var/lib/mysql/mysql.sock存在也是一样会报错。
+#DBPort=3306
+#---------
 #Starting zabbix_server:  /usr/local/zabbix/sbin/zabbix_server: 
 #error while loading shared libraries: libmysqlclient.so.18: 
 #cannot open shared object file: No such file or directory  [FAILED]
 echo "/usr/local/mysql/lib" >> /etc/ld.so.conf
 ldconfig
+#修改agent配置
+#启动脚本:BASEDIR=/usr/local/zabbix
