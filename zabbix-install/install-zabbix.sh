@@ -233,6 +233,11 @@ cd libgd-gd-2.1.1/
 make && make install
 
 cd ${PHP_TAR_DIR}
+tar zxf gettext-latest.tar.gz
+./configure --prefix=/usr/local/php/gettext
+make && make install
+
+cd ${PHP_TAR_DIR}
 tar zxf jpegsrc.v8b.tar.gz 
 cd jpeg-8b/
 ./configure --prefix=/usr/local/php/jpeg
@@ -252,6 +257,7 @@ cd php-5.6.20
 			--with-mcrypt=/usr/local/php/libmcrypt \
 			--with-mysqli=/usr/local/mysql/bin/mysql_config \
 			--with-gd=/usr/local/php/libgd \
+			--with-gettext=/usr/local/php/gettext \
 			--enable-soap \
 			--enable-mbstring=all \
 			--enable-sockets \
@@ -326,3 +332,6 @@ ldconfig
 ####
 #tar地址:百度网盘:tools-zabbix
 ####
+
+#安装agent
+./configure --prefix=/usr/local/zabbix-agent --enable-agent  
