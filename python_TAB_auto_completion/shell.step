@@ -1,0 +1,15 @@
+步骤:
+wget https://github.com/rkulla/pydiction/archive/master.zip
+unzip -q master
+mv pydiction-master pydiction
+mkdir -p ~/.vim/tools/pydiction
+cp -r pydiction/after ~/.vim
+cp pydiction/complete-dict ~/.vim/tools/pydiction
+
+# cat ~/.vimrc
+filetype plugin on
+let g:pydiction_location = '~/.vim/tools/pydiction/complete-dict'
+
+noah-pssh run -b memcached-olive-m.docker.all -m -c "cd /home/work/noah/thirdparty/memcached/matrix/bin && ./noah_control stop"  -a work  -S --ignore-limit
+
+#查看笔记里面的代码<python .vimrc>
