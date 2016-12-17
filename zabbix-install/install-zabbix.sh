@@ -55,12 +55,17 @@ echo "#####################Begin to install httpd########################"
 #	1. apr
 #	2. apr-util
 #	3. pcre
+
+###################install module: apr ########################
+echo "==================begin to install module: APR============================"
 cd ${HTTPD_TAR_DIR}
 tar zxf apr-1.4.5.tar.gz
 cd apr-1.4.5
 ./configure --prefix=/usr/local/httpd/apr
 make && make install
+echo "=================success to install module: APR==========================="
 
+#install apr-util
 cd ${HTTPD_TAR_DIR}
 tar zxf apr-util-1.3.12.tar.gz
 cd apr-util-1.3.12
@@ -68,6 +73,8 @@ cd apr-util-1.3.12
 			--with-apr=/usr/local/httpd/apr/
 make && make install
 
+
+#install pcre
 cd ${HTTPD_TAR_DIR}
 tar zxf pcre-8.38.tar.gz
 cd pcre-8.38
