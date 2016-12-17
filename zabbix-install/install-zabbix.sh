@@ -172,6 +172,7 @@ cd ${MYSQLD_HOME}
 mkdir conf/
 cp support-files/mysql.server /etc/init.d/mysqld
 cp support-files/my-default.cnf conf/my.cnf 
+echo "datadir = /usr/local/mysql/data" >> /usr/local/mysql/conf/my.cnf
 /usr/local/mysql/scripts/mysql_install_db \
 			--defaults-file=/usr/local/mysql/conf/my.cnf \
 			--basedir=/usr/local/mysql \
