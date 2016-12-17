@@ -169,7 +169,7 @@ make && make install
 
 #配置mysql
 cd ${MYSQLD_HOME}
-
+mkdir conf/
 cp support-files/mysql.server /etc/init.d/mysqld
 cp support-files/my-default.cnf conf/my.cnf 
 /usr/local/mysql/scripts/mysql_install_db \
