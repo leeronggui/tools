@@ -177,7 +177,6 @@ cp support-files/my-default.cnf conf/my.cnf
 			--basedir=/usr/local/mysql \
 			--datadir=/usr/local/mysql/data/ \
 			--user=mysql
-
 service mysqld restart
 #参数可选:--user=mysql
 #设置密码:
@@ -191,43 +190,49 @@ echo "#####################Begin to install PHP########################"
 # freetype-2.6.tar.gz   libpng-1.6.21.tar.gz    zlib-1.2.8.tar.gz
 # 此版本没有安装的库:libxml2 
 
+#install autoconf
 cd ${PHP_TAR_DIR}
 tar zxf autoconf-2.69.tar.gz
 cd autoconf-2.69
 ./configure --prefix=/usr/local/php/autoconf
 make && make install
 
+#install freetype
 cd ${PHP_TAR_DIR}
 tar zxf freetype-2.6.tar.gz
 cd freetype-2.6
 ./configure --prefix=/usr/local/php/freetype
 make && make install
 
+#install libmcrypt
 cd ${PHP_TAR_DIR}
 tar zxf libmcrypt-2.5.8.tar.gz
 cd libmcrypt-2.5.8
 ./configure --prefix=/usr/local/php/libmcrypt
 make && make install
 
+#install libpng
 cd ${PHP_TAR_DIR}
 tar zxf libpng-1.6.21.tar.gz
 cd libpng-1.6.21
 ./configure --prefix=/usr/local/php/libpng
 make && make install
 
+#install zlib
 cd ${PHP_TAR_DIR}
 tar zxf zlib-1.2.8.tar.gz
 cd zlib-1.2.8
 ./configure --prefix=/usr/local/php/zlib
 make && make install
 
+#install libiconv
 cd ${PHP_TAR_DIR}
 tar zxf libiconv-1.14.tar.gz
 cd libiconv-1.14
 ./configure --prefix=/usr/local/php/libiconv
 make && make install
 
-
+#install gd
 cd ${PHP_TAR_DIR}
 tar zxf gd-2.1.1.tar.gz
 cd libgd-gd-2.1.1/
@@ -244,12 +249,14 @@ make && make install
 # ./configure --prefix=/usr/local/php/gettext
 # make && make install
 
+#install jpegsec.v8b
 cd ${PHP_TAR_DIR}
 tar zxf jpegsrc.v8b.tar.gz 
 cd jpeg-8b/
 ./configure --prefix=/usr/local/php/jpeg
 make && make install
 
+#install php
 cd ${PHP_TAR_DIR}
 tar zxf php-5.6.20.tar.gz
 cd php-5.6.20
