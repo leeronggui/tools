@@ -327,7 +327,7 @@ make && make install
 cp misc/init.d/fedora/core/zabbix_server /usr/local/zabbix/bin/
 cp misc/init.d/fedora/core/zabbix_agentd /usr/local/zabbix/bin/
 #拷贝前端代码
-cp frontends/php /usr/local/httpd/htdocs/
+cp -r frontends/php /usr/local/httpd/htdocs/
 
 #修改server配置:
 #vim /usr/local/zabbix/bin/zabbix_server
