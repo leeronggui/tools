@@ -300,9 +300,9 @@ tar zxf zabbix-3.0.2.tar.gz
 cd zabbix-3.0.2
 
 #导入数据:
-/usr/local/mysql/bin/mysql -uroot -p zabbix < schema.sql
-/usr/local/mysql/bin/mysql -uroot -p zabbix < images.sql
-/usr/local/mysql/bin/mysql -uroot -p zabbix < data.sql 
+$MYSQLD_HOME/bin/mysql -uroot -p zabbix < $ZABBIX_TAR_DIR/zabbix-3.0.2/database/mysql/schema.sql
+$MYSQLD_HOME/bin/mysql -uroot -p zabbix < $ZABBIX_TAR_DIR/zabbix-3.0.2/database/mysql/images.sql
+$MYSQLD_HOME/bin/mysql -uroot -p zabbix < $ZABBIX_TAR_DIR/zabbix-3.0.2/database/mysql/data.sql 
 
 groupadd zabbix
 useradd -g zabbix -m zabbix
