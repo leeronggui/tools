@@ -25,7 +25,7 @@ setenforce 0
 yum -y install gcc gcc-c++  make automake autoconf kernel-devel ncurses-devel \
 libxml2-devel openssl-devel curl-devel libjpeg-devel libpng-devel  pcre-devel \
 libtool-libs freetype-devel gd zlib-devel file bison patch mlocate flex diffutils \
-readline-devel glibc-devel glib2-devel bzip2-devel gettext-devel libcap-devel libmcrypt-devel net-snmp-devel libXpm-devel
+readline-devel glibc-devel glib2-devel bzip2-devel gettext-devel libcap-devel libmcrypt-devel net-snmp-devel libXpm-devel libtool
 #make all dir
 mkdir -p ${HTTPD_HOME} ${PHP_HOME} ${MYSQLD_HOME} ${ZABBIX_HOME}
 
