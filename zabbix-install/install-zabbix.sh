@@ -181,7 +181,7 @@ echo "datadir = /usr/local/mysql/data" >> /usr/local/mysql/conf/my.cnf
 service mysqld restart
 #参数可选:--user=mysql
 #设置密码:
-./mysqladmin -u root password "111111"
+./bin/mysqladmin -u root password "111111"
 #创建启停脚本
 echo "#####################Install mysql success.########################"
 #install php
