@@ -290,6 +290,7 @@ make && make install
 #配置php
 cp php.ini-development /usr/local/php/etc/
 cp php.ini-production /usr/local/php/etc/
+cd $PHP_HOME/etc
 mv php.ini-production php.ini
 echo "#####################Install PHP success.########################"
 #install zabbix
