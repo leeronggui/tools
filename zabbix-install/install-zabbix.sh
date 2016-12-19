@@ -123,6 +123,12 @@ make && make install
 #[Mon Apr 25 18:14:27.270732 2016] [proxy_balancer:emerg] [pid 19908:tid 140394453731072] AH01177: 
 #	Failed to lookup provider 'shm' for 'slotmem': is mod_slotmem_shm loaded??
 #解决:在httpd.conf配置文件中取消LoadModule slotmem_shm_module modules/mod_slotmem_shm.so注释
+#AddType  application/x-compress .Z
+    #AddType application/x-gzip .gz .tgz
+    #在后面添加：
+    #AddType application/x-httpd-php .php（使Apcche支持PHP）
+    #AddType application/x-httpd-php-source .php5
+    
 echo "LoadModule slotmem_shm_module modules/mod_slotmem_shm.so" >> ${HTTPD_HOME}/conf/httpd.conf
 echo "ServerName www.example.com:80" >> ${HTTPD_HOME}/conf/httpd.conf
 
