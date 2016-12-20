@@ -73,7 +73,7 @@ cd apr-util-1.3.12
 			--with-apr=/usr/local/httpd/apr/
 make && make install
 
-
+echo "=================success to install module: PCRE==========================="
 #install pcre
 cd ${HTTPD_TAR_DIR}
 tar zxf pcre-8.38.tar.gz
@@ -82,6 +82,8 @@ cd pcre-8.38
 make && make install
 
 #install httpd
+
+echo "=================success to install module: httpd==========================="
 cd ${HTTPD_TAR_DIR}
 tar zxf httpd-2.4.20.tar.gz
 cd httpd-2.4.20
@@ -128,7 +130,8 @@ make && make install
     #在后面添加：
     #AddType application/x-httpd-php .php（使Apcche支持PHP）
     #AddType application/x-httpd-php-source .php5
-    
+
+echo "=================configure httpd==========================="
 echo "LoadModule slotmem_shm_module modules/mod_slotmem_shm.so" >> ${HTTPD_HOME}/conf/httpd.conf
 echo "ServerName www.example.com:80" >> ${HTTPD_HOME}/conf/httpd.conf
 
@@ -358,4 +361,4 @@ ldconfig
 ####
 
 #安装agent
-./configure --prefix=/usr/local/zabbix-agent --enable-agent  
+#./configure --prefix=/usr/local/zabbix-agent --enable-agent  
