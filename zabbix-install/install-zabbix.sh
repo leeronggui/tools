@@ -255,10 +255,11 @@ cd libgd-gd-2.1.1/
             --with-jpeg=/usr/local/php/jpeg
 make && make install
 
-# cd ${PHP_TAR_DIR}
-# tar zxf gettext-latest.tar.gz
-# ./configure --prefix=/usr/local/php/gettext
-# make && make install
+cd ${PHP_TAR_DIR}
+tar zxf gettext-0.19.tar.gz
+cd gettext-0.19
+./configure --prefix=/usr/local/php/gettext
+make && make install
 
 #install jpegsec.v8b
 cd ${PHP_TAR_DIR}
@@ -282,7 +283,7 @@ cd php-5.6.20
 			--with-mcrypt=/usr/local/php/libmcrypt \
 			--with-mysqli=/usr/local/mysql/bin/mysql_config \
 			--with-gd=/usr/local/php/libgd \
-			# --with-gettext=/usr/local/php/gettext \
+			--with-gettext=/usr/local/php/gettext \
 			--enable-soap \
 			--enable-mbstring=all \
 			--enable-sockets \
